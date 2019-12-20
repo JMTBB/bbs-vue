@@ -8,14 +8,19 @@
     <v-divider></v-divider>
     <v-container class="pb-0">
       <v-row justify="center">
-        <v-col cols="2">
-          <v-row justify="center">
-            <v-avatar color="indigo" size="50">
-              <v-icon dark >mdi-account-circle-outline</v-icon>
-            </v-avatar>
-          </v-row>
-        </v-col>
+        <v-avatar color="indigo" size="80">
+          <v-icon dark>mdi-account-circle-outline</v-icon>
+        </v-avatar>
       </v-row>
+      <v-row justify="center">
+        <span class="title my-2">用户名</span>
+      </v-row>
+      <v-row justify="center">
+        <span class="subtitle">邮箱：</span>
+      </v-row>
+
+        <v-divider class="px-4 my-4"></v-divider>
+      
 
       <v-row justify="center">
         <v-col cols="6" class="pt-0">

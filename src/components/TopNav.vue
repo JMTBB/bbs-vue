@@ -2,7 +2,7 @@
   <v-app>
     <v-toolbar color="white" dense max-height="48px">
       <v-row justify="center" no-gutters>
-        <v-col md="6" id="topbar">
+        <v-col md="6" sm="11" id="topbar">
           <v-row>
             <v-toolbar-title id="logo">NCU BBS</v-toolbar-title>
             <v-spacer></v-spacer>
