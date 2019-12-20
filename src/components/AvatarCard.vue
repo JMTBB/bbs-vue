@@ -3,8 +3,8 @@
     <v-card-title>
       <v-row align="center" v-if="islogin">
         <v-col md="3">
-          <v-avatar color="indigo">
-            <v-icon dark>mdi-account-circle-outline</v-icon>
+          <v-avatar color="indigo" tile>
+            <v-img :src=avatarUrl></v-img>
           </v-avatar>
         </v-col>
         <v-col md="9">用户名</v-col>
@@ -48,13 +48,19 @@
 <script>
 export default {
   data: () => ({
-    name: "avatarcard"
+    name: "avatarcard",
+    user_id: 12142,
   }),
   methods: {
     goto(target) {
       this.$router.push({ path: target }).catch(err => {
         err.length;
       });
+    }
+  },
+  computed: {
+    avatarUrl() {
+      return this.$store.state.avatarBase + this.$md5(this.user_id) + this.$store.state.avatarTail;
     }
   },
   props: {
