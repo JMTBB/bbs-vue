@@ -8,7 +8,9 @@ Vue.use(Vuex)
 export default new Vuex.Store({
 
     state: {
-        logined: false
+        logined: false,
+        avatarBase: 'http://www.gravatar.com/avatar/',
+        avatarTail: '?d=retro',
     },
     mutations: {
         login(state) {

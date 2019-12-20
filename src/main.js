@@ -3,6 +3,9 @@ import App from './App.vue'
 import router from './router'
 import vuetify from '@/plugins/vuetify'
 import store from './store'
+import md5 from 'md5'
+
+Vue.prototype.$md5 = md5
 
 Vue.config.productionTip = false
 

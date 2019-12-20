@@ -7,6 +7,7 @@ import Register from '../components/left/Register.vue'
 import MainPage from '../components/MainPageListItem.vue'
 import Editor from '../components/Editor.vue'
 import Setting from '../components/left/Setting.vue'
+import PostView from '../components/PostView.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -21,7 +22,8 @@ const routes = [
       { path: 'register', name: 'register', component: Register},
       { path: 'editor', name: 'editor', component: Editor },
       { path: 'main', name: 'main', component: MainPage },
-      { path: 'setting', name: 'setting', component: Setting }
+      { path: 'setting', name: 'setting', component: Setting },
+      { path: 'post', name: 'post', component: PostView }
     
     
     

@@ -9,7 +9,8 @@
           <v-list-item-content class="pt-0 pb-0">
             <v-list-item-title class="subtitle-1 mb-1">
               <v-row class="pl-3 pr-3">
-                {{post.title}}
+                <router-link to="post">{{post.title}}</router-link>
+                
                 <v-spacer></v-spacer>
                 <v-icon color="yellow">mdi-star-outline</v-icon>
                 <v-icon color="green">mdi-format-vertical-align-top</v-icon>

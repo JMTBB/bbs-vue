@@ -10,7 +10,7 @@
       <v-textarea
         filled
         counter
-        rows="21"
+        rows="19"
         label="内容"
         value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse"
       ></v-textarea>
@@ -22,12 +22,28 @@
         <v-item v-for="n in 8" :key="n" v-slot:default="{ active, toggle }">
           <v-chip active-class="purple--text" :input-value="active" @click="toggle">Tag {{ n }}</v-chip>
         </v-item>
+
+
+        <v-combobox
+            
+        ></v-combobox>
       </v-item-group>
+
+
+
+
       <v-divider class="my-2"></v-divider>
 
       <v-row class="mx-1">
         <v-switch label="设置积分奖励" v-model="bonus"></v-switch>
-        <v-slider v-model="slider" class="align-center px-2" :max="max" min="0" hide-details v-if="bonus">
+        <v-slider
+          v-model="slider"
+          class="align-center px-2"
+          :max="max"
+          min="0"
+          hide-details
+          v-if="bonus"
+        >
           <template v-slot:append v-if="bonus">
             <v-text-field
               v-model="slider"
@@ -57,7 +73,7 @@ export default {
     name: "editor",
     bonus: false,
     slider: 0,
-    max: 50,
+    max: 50
   })
 };
 </script>
