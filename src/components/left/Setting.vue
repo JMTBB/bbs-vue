@@ -7,19 +7,29 @@
     </v-card-text>
     <v-divider></v-divider>
     <v-container class="pb-0">
-      <v-row justify="center" v-if="test">
+      <v-row justify="center">
+        <v-col cols="2">
+          <v-row justify="center">
+            <v-avatar color="indigo" size="50">
+              <v-icon dark >mdi-account-circle-outline</v-icon>
+            </v-avatar>
+          </v-row>
+        </v-col>
+      </v-row>
+
+      <v-row justify="center">
         <v-col cols="6" class="pt-0">
-          <v-text-field label="用户名" dense prepend-icon="mdi-account-outline"></v-text-field>
+          <v-text-field label="联系方式" dense prepend-icon="mdi-cellphone"></v-text-field>
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col cols="6" class="pt-0">
-          <v-text-field label="邮箱" dense prepend-icon="mdi-email-outline"></v-text-field>
+          <v-text-field label="工作性质" dense prepend-icon="mdi-alien-outline"></v-text-field>
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col cols="6" class="pt-0">
-          <v-text-field label="密码" dense prepend-icon="mdi-key-outline"></v-text-field>
+          <v-text-field label="工作地点" dense prepend-icon="mdi-map-marker"></v-text-field>
         </v-col>
       </v-row>
     </v-container>
@@ -27,7 +37,7 @@
     <v-card-actions>
       <v-row justify="center">
         <v-col cols="6" class="pt-0">
-          <v-btn color="primary">登录</v-btn>
+          <v-btn color="warning">保存</v-btn>
         </v-col>
       </v-row>
     </v-card-actions>

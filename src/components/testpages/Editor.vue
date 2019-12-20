@@ -37,6 +37,8 @@
           </v-chip>
         </v-item>
       </v-item-group>
+      <v-divider class="my-2"></v-divider>
+      <v-switch   label="设置积分奖励"></v-switch>
     </v-card-text>
 
     <v-divider></v-divider>

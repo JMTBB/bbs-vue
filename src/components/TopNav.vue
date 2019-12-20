@@ -1,29 +1,29 @@
 <template>
   <v-app>
-    <v-app-bar color="white" dense>
+    <v-toolbar color="white" dense max-height="48px">
       <v-row justify="center" no-gutters>
         <v-col md="6" id="topbar">
           <v-row>
             <v-toolbar-title id="logo">NCU BBS</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn text v-for="item in navItems" :key="item">{{item}}</v-btn>
+            <v-btn text v-for="item in navItem" :key="item.label" @click="goto(item.link)">{{item.label}}</v-btn>
           </v-row>
         </v-col>
       </v-row>
-    </v-app-bar>
+    </v-toolbar>
     <v-content>
       <v-row>
-        <v-col md="6" id="maincontent">
+        <v-col md="6" sm="11" id="maincontent">
           <v-row>
-            <v-col md="9">
-              <Login></Login>
-              <Register></Register>
-              <Main></Main>
-              <Editor></Editor>
+            <v-col md="9" sm="8">
+              <router-view>
+
+              </router-view>
+
             </v-col>
-            <v-col md="3">
+            <v-col md="3" sm="4">
               
-              <AvatarCard :islogin="false"></AvatarCard>
+              <AvatarCard :islogin="true"></AvatarCard>
             </v-col>
           </v-row>
         </v-col>
@@ -38,22 +38,23 @@
 
 <script>
 // import Editors from "../components/Editor";
-import Editor from "../components/testpages/Editor";
 import AvatarCard from "../components/AvatarCard";
-import Main from "../components/MainPageListItem";
-import Register from '../components/left/Register'
-import Login from '../components/left/Login'
 export default {
   data: () => ({
-    navItems: ["首页", "注册", "登录"]
+    navItems: ["首页", "注册", "登录"],
+    navItem: [
+      { label: '首页', link: '/main' },
+      { label: '注册', link: '/register'},
+      { label: '登录', link: '/login' },
+    ]
   }),
+  methods: {
+    goto(target) {
+      this.$router.push({path: target}).catch(err => { err.length })
+    }
+  },
   components: {
-    // Editors,
-    Editor,
     AvatarCard,
-    Main,
-    Register,
-    Login
   }
 };
 </script>

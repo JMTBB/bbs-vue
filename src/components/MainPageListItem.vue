@@ -1,14 +1,21 @@
 <template>
   <div>
     <v-card>
-
       <v-list v-for="(post, i) in postData" :key="i" class="pt-0 pb-0">
         <v-list-item>
           <v-list-item-avatar size="45" color="light-blue">
             <v-icon>mdi-account-circle-outline</v-icon>
           </v-list-item-avatar>
           <v-list-item-content class="pt-0 pb-0">
-            <v-list-item-title class="subtitle-1 mb-1">{{post.title}}</v-list-item-title>
+            <v-list-item-title class="subtitle-1 mb-1">
+              <v-row class="pl-3 pr-3">
+                {{post.title}}
+                <v-spacer></v-spacer>
+                <v-icon color="yellow">mdi-star-outline</v-icon>
+                <v-icon color="green">mdi-format-vertical-align-top</v-icon>
+              </v-row>
+            </v-list-item-title>
+
             <v-list-item-subtitle>
               <v-row>
                 <v-col cols="3" class="caption pt-0 pb-0">

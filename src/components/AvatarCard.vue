@@ -20,8 +20,11 @@
     </v-card-title>
 
     <v-divider></v-divider>
-    <v-card-text v-if="islogin">
-      <v-icon>mdi-pencil-outline</v-icon>发布新帖子
+    <v-card-text v-if="islogin" justify="center">
+      <v-btn text @click="goto('editor')">
+        <v-icon>mdi-pencil-outline</v-icon>发布新帖子
+      </v-btn>
+      <!-- <v-icon>mdi-pencil-outline</v-icon>发布新帖子 -->
     </v-card-text>
     <v-card-text v-else>
       <v-row justify="center">
@@ -47,6 +50,13 @@ export default {
   data: () => ({
     name: "avatarcard"
   }),
+  methods: {
+    goto(target) {
+      this.$router.push({ path: target }).catch(err => {
+        err.length;
+      });
+    }
+  },
   props: {
     islogin: {
       type: Boolean,

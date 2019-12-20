@@ -2,7 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import Home from '../views/Home.vue'
 import Nav from '../components/TopNav.vue'
-
+import Login from '../components/left/Login.vue'
+import Register from '../components/left/Register.vue'
+import MainPage from '../components/MainPageListItem.vue'
+import Editor from '../components/Editor.vue'
+import Setting from '../components/left/Setting.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -11,10 +15,19 @@ const routes = [
     path: '/',
     name: 'topnav',
     component: Nav,
+    redirect: '/main',
     children: [
-      
+      { path: 'login', name: 'login', component: Login },
+      { path: 'register', name: 'register', component: Register},
+      { path: 'editor', name: 'editor', component: Editor },
+      { path: 'main', name: 'main', component: MainPage },
+      { path: 'setting', name: 'setting', component: Setting }
+    
+    
+    
     ]
-  }
+  },
+  
   // {
   //   path: '/',
   //   name: 'home',
