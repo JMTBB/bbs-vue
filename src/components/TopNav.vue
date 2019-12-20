@@ -3,8 +3,8 @@
     <v-toolbar color="white" dense max-height="48px">
       <v-row justify="center" no-gutters>
         <v-col md="6" sm="11" id="topbar">
-          <v-row>
-            <v-toolbar-title id="logo">NCU BBS</v-toolbar-title>
+          <v-row align="center">
+            <v-toolbar-title id="logo"><img class="mt-2" width="100px" alt="NCU BBS" src="../assets/ncuhub.png"></v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn text v-for="item in navItem" :key="item.label" @click="goto(item.link)">{{item.label}}</v-btn>
           </v-row>
