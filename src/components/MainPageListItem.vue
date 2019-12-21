@@ -137,6 +137,13 @@ export default {
         commentName: "回复者用户名"
       }
     ]
-  })
+  }),
+  created() {
+    if(window.localStorage.getItem("user")!=null) {
+      this.$store.commit('login');
+    }else {
+      this.$store.commit('logout');
+    }
+  }
 };
 </script>

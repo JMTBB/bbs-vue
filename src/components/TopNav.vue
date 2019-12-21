@@ -6,7 +6,7 @@
           <v-row align="center">
             <v-toolbar-title id="logo"><img class="mt-2" width="100px" alt="NCU BBS" src="../assets/ncuhub.png"></v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn text v-for="item in navItem" :key="item.label" @click="goto(item.link)">{{item.label}}</v-btn>
+            <v-btn text v-for="item in curItem" :key="item.label" @click="goto(item.link)">{{item.label}}</v-btn>
           </v-row>
         </v-col>
       </v-row>
@@ -23,7 +23,7 @@
             </v-col>
             <v-col md="3" sm="4">
               
-              <AvatarCard :islogin="true"></AvatarCard>
+              <AvatarCard :islogin="islogin"></AvatarCard>
             </v-col>
           </v-row>
         </v-col>
@@ -41,12 +41,19 @@
 import AvatarCard from "../components/AvatarCard";
 export default {
   data: () => ({
-    navItems: ["首页", "注册", "登录"],
     navItem: [
       { label: '首页', link: '/main' },
       { label: '注册', link: '/register'},
       { label: '登录', link: '/login' },
-    ]
+    ],
+    loginedItem: [
+      { label: '首页', link: '/main' },
+      { label: '设置', link: '/setting'},
+    ],
+    logined: false,
+    
+    
+
   }),
   methods: {
     goto(target) {
@@ -55,7 +62,33 @@ export default {
   },
   components: {
     AvatarCard,
+  },
+  computed: {
+    curItem() {
+       if(this.$store.state.logined) {
+        return this.loginedItem;
+      }else {
+        return this.navItem;
+      }
+    },
+    islogin() {
+      // if(window.localStorage.getItem("user")!=null) {
+      //   return true;
+      // }else {
+      //   return false;
+      // }
+      return this.$store.state.logined;
+    }
+  },
+  created() {
+    if(window.localStorage.getItem("user")!=null) {
+      this.$store.commit('login');
+    }else {
+      this.$store.commit('logout');
+    }
   }
+  
+ 
 };
 </script>
 

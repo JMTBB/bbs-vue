@@ -4,10 +4,10 @@
       <v-row align="center" v-if="islogin">
         <v-col md="3">
           <v-avatar color="indigo" tile>
-            <v-img :src=avatarUrl></v-img>
+            <v-img :src="avatarUrl"></v-img>
           </v-avatar>
         </v-col>
-        <v-col md="9">用户名</v-col>
+        <v-col md="9">{{name}}</v-col>
       </v-row>
       <v-row v-else>
         <v-col cols="12" class="pt-0 pb-0">
@@ -24,15 +24,14 @@
       <v-btn text @click="goto('editor')">
         <v-icon>mdi-pencil-outline</v-icon>发布新帖子
       </v-btn>
-      <!-- <v-icon>mdi-pencil-outline</v-icon>发布新帖子 -->
     </v-card-text>
     <v-card-text v-else>
       <v-row justify="center">
-        <v-btn color="success">现在注册</v-btn>
+        <v-btn color="success" @click="goto('/register')">现在注册</v-btn>
       </v-row>
       <v-row justify="center" align="center" class="mt-1">
         <p class="mb-0">已注册用户请</p>
-        <router-link to>登录</router-link>
+        <router-link to="/login">登录</router-link>
       </v-row>
     </v-card-text>
     <v-divider v-if="islogin"></v-divider>
@@ -46,21 +45,34 @@
   </v-card>
 </template>
 <script>
+import { getUser } from "@/api/api";
 export default {
   data: () => ({
-    name: "avatarcard",
-    user_id: 12142,
+    name: "",
+    user_id: 12142
   }),
   methods: {
     goto(target) {
       this.$router.push({ path: target }).catch(err => {
         err.length;
       });
+    },
+    getuserName: function() {
+      getUser(this.userId).then(dataBack => {
+        this.name = dataBack.data.username;
+      });
     }
   },
   computed: {
     avatarUrl() {
-      return this.$store.state.avatarBase + this.$md5(this.user_id) + this.$store.state.avatarTail;
+      return (
+        this.$store.state.avatarBase +
+        this.$md5(this.userId) +
+        this.$store.state.avatarTail
+      );
+    },
+    userId() {
+      return JSON.parse(window.localStorage.getItem("user"));
     }
   },
   props: {
@@ -68,6 +80,12 @@ export default {
       type: Boolean,
       default: false
     }
+  },
+  mounted() {
+    this.getuserName();
+  },
+  beforeUpdate() {
+    console.log("登录了吗" + this.islogin);
   }
 };
 </script>

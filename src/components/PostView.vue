@@ -1,45 +1,58 @@
 <template>
-  <v-card>
-    <v-card-text class="py-2">
-      <v-row align="center" class="ml-1">
-        <router-link to>NCUBBS</router-link>
-        <span>&nbsp; > &nbsp;</span>
-        <span>Post</span>
-        <v-spacer></v-spacer>
-        <v-menu bottom left>
-          <template v-slot:activator="{ on }">
-            <v-btn icon v-on="on">
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-          </template>
+  <div>
+    <v-card>
+      <v-card-text class="py-2">
+        <v-row align="center" class="ml-1">
+          <router-link to>NCUBBS</router-link>
+          <span>&nbsp; > &nbsp;</span>
+          <span>Post</span>
+          <v-spacer></v-spacer>
+          <v-menu bottom left>
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </template>
 
-          <v-list>
-            <v-list-item v-for="(item, i) in items" :key="i" dense>
-              <v-list-item-title>{{ item }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </v-row>
-    </v-card-text>
-    <v-divider></v-divider>
-    <v-card-title class="headline">{{post.title}}</v-card-title>
-    <v-card-text>
-      <v-row>
-        <v-col cols="3" class="caption pt-0 pb-0">
-          来自：
-          <strong>{{post.author}}</strong>
-        </v-col>
-        <v-col cols="9" class="caption pt-0 pb-0">
-          发帖时间：
-          <strong>{{post.time}}</strong>
-        </v-col>
-      </v-row>
-    </v-card-text>
-    <v-divider></v-divider>
-    <v-card-text class="subtitle-1">{{post.content}}</v-card-text>
-  </v-card>
+            <v-list>
+              <v-list-item v-for="(item, i) in items" :key="i" dense>
+                <v-list-item-title>{{ item }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-row>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-title class="headline">{{post.title}}</v-card-title>
+      <v-card-text>
+        <v-row>
+          <v-col cols="3" class="caption pt-0 pb-0">
+            来自：
+            <strong>{{post.author}}</strong>
+          </v-col>
+          <v-col cols="9" class="caption pt-0 pb-0">
+            发帖时间：
+            <strong>{{post.time}}</strong>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-text class="subtitle-1">{{post.content}}</v-card-text>
+    </v-card>
+
+    <v-container>
+      <v-divider></v-divider>
+    </v-container>
+    <RepList></RepList>
+    <v-container>
+      <v-divider></v-divider>
+    </v-container>
+    <Reply></Reply>
+  </div>
 </template>
 <script>
+import Reply from "../components/left/Reply";
+import RepList from "../components/left/RepList";
 export default {
   data: () => ({
     post: {
@@ -51,7 +64,11 @@ export default {
       test: ""
     },
     items: ["编辑", "删除", "置顶", "加精"]
-  })
+  }),
+  components: {
+    Reply,
+    RepList
+  }
 };
 </script>
 
