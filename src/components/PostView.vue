@@ -7,6 +7,7 @@
           <span>&nbsp; > &nbsp;</span>
           <span>Post</span>
           <v-spacer></v-spacer>
+          <v-chip v-for="(i,tag) in postTags" :key="i">{{tags[parseInt(tag.tagid)]}}</v-chip>
           <v-menu bottom left v-if="needMenu">
             <template v-slot:activator="{ on }">
               <v-btn icon v-on="on">
@@ -54,6 +55,10 @@
 import Reply from "../components/left/Reply";
 import RepList from "../components/left/RepList";
 import { getPostById } from "@/api/api";
+import { putTop } from "@/api/api";
+import { putHigh } from "@/api/api";
+import { deleteById } from "@/api/api";
+import { getTagById } from "@/api/api";
 export default {
   data: () => ({
     //假数据
@@ -71,6 +76,7 @@ export default {
       postpoint: 0,
       issolved: 0
     },
+    postTags: [],
     toped: false,
     highlighted: false,
 
@@ -81,27 +87,55 @@ export default {
     curEdit: null,
     // needMark: false,
 
-    key: 0
+    key: 0,
+    tops: null,
+    newtail: [],
+    tags: ["问与答", "程序员", "分享发现", "分享创造"],
+
   }),
   methods: {
-    handleMenu(index, item) {
-      this.curEdit = item;
+    handleMenu(index) {
       switch (index) {
         case 0:
           //编辑
           console.log("edit");
+
           break;
         case 1:
           //删除
           console.log("delete");
+          deleteById(this.post.postid).then(dataBack => {
+            if (dataBack.code == 200) {
+              console.log("成功");
+              this.$router.push({ path: "/main" });
+            } else {
+              console.log("失败");
+            }
+          });
           break;
         case 2:
           //置顶及取消
           console.log("top");
+
+          putTop(this.post.postid).then(dataBack => {
+            if (dataBack.code == 200) {
+              console.log("成功");
+            } else {
+              console.log("失败");
+            }
+          });
           break;
         case 3:
           //加精及取消
           console.log("highlight");
+
+          putHigh(this.post.postid).then(dataBack => {
+            if (dataBack.code == 200) {
+              console.log("成功");
+            } else {
+              console.log("失败");
+            }
+          });
           break;
 
         default:
@@ -118,6 +152,16 @@ export default {
           console.log("详情获取失败");
         }
       });
+
+      getTagById(parseInt(this.$route.params.id)).then(dataBack => {
+        if (dataBack.code == 200) {
+          console.log("Tag成功");
+          console.log(dataBack.data);
+          this.postTags = dataBack.data;
+        } else {
+          console.log("Tag获取失败");
+        }
+      });
     }
   },
 
@@ -126,7 +170,7 @@ export default {
     RepList
   },
   computed: {
-    adminmenus() {
+    adminmenu() {
       if (this.isAdmin) {
         let top = this.toped ? "取消置顶" : "置顶";
         let high = this.highlighted ? "取消加精" : "加精";
@@ -138,8 +182,24 @@ export default {
         return [];
       }
     },
+    htop() {
+      console.log("为啥不置顶" + this.post.toped);
+      return this.post.posttop == 1 ? "取消置顶" : "置顶";
+    },
+    hhigh() {
+      console.log("为啥不jj" + this.post.highlighted);
+      return this.post.highli == 1 ? "取消加精" : "加精";
+    },
+    tail() {
+      if (this.isAdmin) {
+        let result = new Array();
+        result[0] = this.htop;
+        result[1] = this.hhigh;
+        return result;
+      } else return [];
+    },
     menus() {
-      return this.items.concat(this.adminmenus);
+      return this.items.concat(this.tail);
     },
     logined() {
       if (window.localStorage.getItem("user") != null) {
@@ -147,7 +207,6 @@ export default {
       } else return false;
     },
     needMark() {
-
       let temp =
         this.logined &&
         this.post.bonus == 1 &&
@@ -168,6 +227,7 @@ export default {
     this.getPostInfo();
     this.isAdmin = JSON.parse(window.localStorage.getItem("admin"));
     console.log(this.isAdmin + "视图页面");
+    console.log("创造后" + this.post.toped);
   },
   beforeUpdate() {
     this.isAdmin = JSON.parse(window.localStorage.getItem("admin"));
@@ -176,7 +236,6 @@ export default {
     needMark: {
       immediate: true,
       handler: function() {
-        console.log("监听-----" + this.needMark);
         if (this.needMark) {
           this.$store.state.needIt = true;
           console.log("done");

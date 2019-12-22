@@ -25,8 +25,6 @@
         <v-checkbox v-model="tagselected" label="分享创造" value="3"></v-checkbox>
       </v-row>
 
-
-
       <v-divider class="my-2"></v-divider>
 
       <v-row class="mx-1">
@@ -64,7 +62,7 @@
 
 <script>
 import { addPost } from "@/api/api";
-// import {addTag} from '@/api/api'
+import { addTag } from "@/api/api";
 export default {
   data: () => ({
     name: "editor",
@@ -78,7 +76,8 @@ export default {
     post_title: "",
 
     tags: ["问与答", "程序员", "分享发现", "分享创造"],
-    tagselected: []
+    tagselected: [],
+    postdata: null
   }),
   methods: {
     //测试代码
@@ -93,20 +92,29 @@ export default {
       params.append("post_point", this.post_point);
       params.append("user_id", this.user_id);
       params.append("have_bonus", this.havebonus ? 1 : 0);
-      addPost(params).then(dataBack => {
-        if (dataBack.code == 200) {
-          console.log(dataBack.data);
-          this.$router.push({ path: "/main" });
-        } else {
-          console.log("失败");
-        }
-      });
-      // if(this.tagselected != 0) {
-      //   for(a in this.tagselected) {
-      //     let params = new FormData();
-          
-      //   }
-      // }
+      addPost(params)
+        .then(dataBack => {
+          if (dataBack.code == 200) {
+            console.log(dataBack.data);
+            this.postdata = dataBack.data;
+            this.$router.push({ path: "/main" });
+          } else {
+            console.log("失败");
+          }
+        })
+        .then(() => {
+          if (this.tagselected != 0) {
+            for (let a in this.tagselected) {
+              let params = new FormData();
+              console.log(this.postdata);
+              params.append("postid", this.postdata.postid);
+              params.append("tagid", a);
+              addTag(params).then(data => {
+                console.log(data.code);
+              });
+            }
+          }
+        });
     }
   },
   computed: {

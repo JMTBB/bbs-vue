@@ -22,7 +22,7 @@
               <v-row>
                 <v-col cols="3" class="caption pt-0 pb-0">
                   来自：
-                  <strong>{{post.userid}}</strong>
+                  <strong>{{getName(post.userid)}}</strong>
                 </v-col>
                 <v-col cols="9" class="caption pt-0 pb-0">
                   发布时间：
@@ -39,15 +39,18 @@
 </template>
 <script>
 import { getPostByTime } from "@/api/api";
+import {getUsernameById} from '@/api/api'
 export default {
   data: () => ({
-    posts: []
+    posts: [],
+    nameStore: [],
   }),
   methods: {
     getPosts() {
       getPostByTime().then(dataBack => {
         if (dataBack.code == 200) {
           console.log("获取所有帖子成功");
+
           this.posts = dataBack.data;
         } else {
           console.log("获取信息失败");
@@ -63,6 +66,14 @@ export default {
       this.$router.push({
         path: `/post/${id}`
       })
+    },
+    getName(id) {
+      console.log(id);
+      let act;
+      let name = getUsernameById(id);
+      name.then(name => console.log(name)).then(act = name);
+      console.log('-----------' + act)
+      return act;
     }
   },
   created() {
