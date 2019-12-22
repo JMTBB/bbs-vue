@@ -23,7 +23,7 @@
             </v-col>
             <v-col md="3" sm="4">
               
-              <AvatarCard :islogin="islogin"></AvatarCard>
+              <AvatarCard :islogin="islogin" :key="islogin"></AvatarCard>
             </v-col>
           </v-row>
         </v-col>
@@ -72,11 +72,6 @@ export default {
       }
     },
     islogin() {
-      // if(window.localStorage.getItem("user")!=null) {
-      //   return true;
-      // }else {
-      //   return false;
-      // }
       return this.$store.state.logined;
     }
   },

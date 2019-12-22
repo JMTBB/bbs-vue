@@ -75,6 +75,7 @@ export default {
           window.localStorage.removeItem("admin");
           window.localStorage.setItem("user", data);
           this.$store.commit("login");
+          this.$store.state.userid = data;
           if (code == 201) {
             this.$store.commit("setAdmin");
             window.localStorage.setItem("admin", true);

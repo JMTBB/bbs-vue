@@ -12,22 +12,52 @@
       counter
       rows="3"
       label="回复"
-      value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse"
+      v-model="content"
     ></v-textarea>
     <v-divider></v-divider>
-    <v-card-action>
+    
+    <v-card-actions>
       <v-row class="px-2">
         <v-container>
-          <v-btn color="success" small>回复</v-btn>
+          <v-btn color="success" small @click="handleComment">回复</v-btn>
         </v-container>
       </v-row>
-    </v-card-action>
+    </v-card-actions>
   </v-card>
 </template>
 <script>
+import {addComment} from '@/api/api'
 export default {
   data: () => ({
-    name: "reply"
-  })
+    name: "reply",
+    content: '',
+  }),
+  props: {
+    post_id: {
+      default: 0,
+    }
+  },
+  computed: {
+    user_id() {
+      return JSON.parse(window.localStorage.getItem('user'));
+    }
+  },
+  methods: {
+    handleComment(){
+      let params = new FormData();
+      params.append("post_id", this.post_id);
+      params.append("userid", this.user_id);
+      params.append("content",this.content);
+      addComment(params).then(dataBack=> {
+        if(dataBack.code == 200) {
+          this.content = ' ';
+          console.log('评论成功')
+        }else {
+          console.log('评论失败');
+        }
+      })
+
+    }
+  }
 };
 </script>

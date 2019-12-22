@@ -37,7 +37,7 @@
     <v-divider v-if="islogin"></v-divider>
     <v-card-text v-if="islogin">
       <v-row class="ml-2 mr-2">
-        <a href>0条未读消息</a>
+        <span>你的金币数为：{{coins}}</span>
         <v-spacer></v-spacer>
         <v-icon>mdi-coin-outline</v-icon>
       </v-row>
@@ -49,7 +49,9 @@ import { getUser } from "@/api/api";
 export default {
   data: () => ({
     name: "",
-    user_id: 12142
+    user_id: 0,
+    coins: 0,
+    userId: 0,
   }),
   methods: {
     goto(target) {
@@ -58,23 +60,31 @@ export default {
       });
     },
     getuserName: function() {
-      getUser(this.userId).then(dataBack => {
+      getUser(this.user_id).then(dataBack => {
         this.name = dataBack.data.username;
+        this.coins = dataBack.data.userpoint;
       });
-    }
+    },
+
   },
   computed: {
     avatarUrl() {
       return (
         this.$store.state.avatarBase +
-        this.$md5(this.userId) +
+        this.$md5(this.user_id) +
         this.$store.state.avatarTail
       );
     },
-    userId() {
-      return JSON.parse(window.localStorage.getItem("user"));
+    // userId() {
+    //    return JSON.parse(window.localStorage.getItem("user"));
+    // },
+  },
+  watch: {
+    islogin: function() {
+      this.user_id = JSON.parse(window.localStorage.getItem("user"));
     }
   },
+
   props: {
     islogin: {
       type: Boolean,
@@ -82,10 +92,9 @@ export default {
     }
   },
   mounted() {
+    console.log("安装中....");
+    this.user_id = JSON.parse(window.localStorage.getItem("user"));
     this.getuserName();
-  },
-  beforeUpdate() {
-    console.log("登录了吗" + this.islogin);
   }
 };
 </script>

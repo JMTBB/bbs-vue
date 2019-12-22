@@ -47,6 +47,15 @@ export default {
     name: "editor",
     bonusTemp: false,
     slider: 0
-  })
+  }),
+  props: {
+    points: {
+      default: 0,
+    },
+    new: {
+      type: Boolean,
+      default: false,
+    }
+  }
 };
 </script>

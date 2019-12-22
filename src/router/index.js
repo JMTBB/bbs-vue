@@ -23,7 +23,7 @@ const routes = [
       { path: 'editor', name: 'editor', component: Editor },
       { path: 'main', name: 'main', component: MainPage },
       { path: 'setting', name: 'setting', component: Setting },
-      { path: 'post', name: 'post', component: PostView }
+      { path: 'post/:id', name: 'post', component: PostView }
     
     
     

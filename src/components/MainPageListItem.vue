@@ -1,19 +1,20 @@
 <template>
   <div>
     <v-card>
-      <v-list v-for="(post, i) in postData" :key="i" class="pt-0 pb-0">
+      <v-list v-for="(post, i) in posts" :key="i" class="pt-0 pb-0">
         <v-list-item>
-          <v-list-item-avatar size="45" color="light-blue">
-            <v-icon>mdi-account-circle-outline</v-icon>
+          <v-list-item-avatar tile size="45" color="light-blue">
+            <v-img :src="getAvatar(post.userid)"></v-img>
           </v-list-item-avatar>
           <v-list-item-content class="pt-0 pb-0">
             <v-list-item-title class="subtitle-1 mb-1">
               <v-row class="pl-3 pr-3">
-                <router-link to="post">{{post.title}}</router-link>
-                
+                <span @click="goto(post.postid)">{{post.posttitle}}</span>
+
                 <v-spacer></v-spacer>
-                <v-icon color="yellow">mdi-star-outline</v-icon>
-                <v-icon color="green">mdi-format-vertical-align-top</v-icon>
+                <v-icon v-if="post.bonus == 1">mdi-coin-outline</v-icon>
+                <v-icon v-if="post.highli == 1">mdi-star-outline</v-icon>
+                <v-icon v-if="post.posttop == 1">mdi-format-vertical-align-top</v-icon>
               </v-row>
             </v-list-item-title>
 
@@ -21,11 +22,11 @@
               <v-row>
                 <v-col cols="3" class="caption pt-0 pb-0">
                   来自：
-                  <strong>{{post.author}}</strong>
+                  <strong>{{post.userid}}</strong>
                 </v-col>
                 <v-col cols="9" class="caption pt-0 pb-0">
-                  最后回复来自：
-                  <strong>{{post.commentName}}</strong>
+                  发布时间：
+                  <strong>{{post.posttime.substr(0,10)}}-{{post.posttime.substr(11,8)}}</strong>
                 </v-col>
               </v-row>
             </v-list-item-subtitle>
@@ -37,113 +38,41 @@
   </div>
 </template>
 <script>
+import { getPostByTime } from "@/api/api";
 export default {
   data: () => ({
-    postData: [
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      },
-      {
-        title: "测试标题啊啊啊啊啊啊啊a有点难写",
-        author: "发表者用户名",
-        lastCommentTime: new Date(),
-        commentName: "回复者用户名"
-      }
-    ]
+    posts: []
   }),
-  created() {
-    if(window.localStorage.getItem("user")!=null) {
-      this.$store.commit('login');
-    }else {
-      this.$store.commit('logout');
+  methods: {
+    getPosts() {
+      getPostByTime().then(dataBack => {
+        if (dataBack.code == 200) {
+          console.log("获取所有帖子成功");
+          this.posts = dataBack.data;
+        } else {
+          console.log("获取信息失败");
+        }
+      });
+    },
+    getAvatar(id) {
+      return this.$store.state.avatarBase +
+        this.$md5(id) +
+        this.$store.state.avatarTail;
+    },
+    goto(id) {
+      this.$router.push({
+        path: `/post/${id}`
+      })
     }
+  },
+  created() {
+    if (window.localStorage.getItem("user") != null) {
+      this.$store.commit("login");
+      this.$store.state.userid = JSON.parse(window.localStorage.getItem("user"));
+    } else {
+      this.$store.commit("logout");
+    }
+    this.getPosts();
   }
 };
 </script>

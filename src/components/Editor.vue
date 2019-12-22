@@ -5,9 +5,10 @@
     </v-toolbar>
 
     <v-card-text>
-      <v-text-field filled label="标题" value="My new post"></v-text-field>
+      <v-text-field filled label="标题" v-model="post_title" value="My new post"></v-text-field>
 
       <v-textarea
+        v-model="post_content"
         filled
         counter
         rows="19"
@@ -16,37 +17,31 @@
       ></v-textarea>
 
       <v-divider class="my-2"></v-divider>
-
-      <v-item-group multiple>
-        <v-subheader>Tags</v-subheader>
-        <v-item v-for="n in 8" :key="n" v-slot:default="{ active, toggle }">
-          <v-chip active-class="purple--text" :input-value="active" @click="toggle">Tag {{ n }}</v-chip>
-        </v-item>
-
-
-        <v-combobox
-            
-        ></v-combobox>
-      </v-item-group>
-
+      <v-row class="mx-1" @click="a">
+        <span class="mt-5 mr-2">话题:</span>
+        <v-checkbox v-model="tagselected" label="问与答" value="0"></v-checkbox>
+        <v-checkbox v-model="tagselected" label="程序员" value="1"></v-checkbox>
+        <v-checkbox v-model="tagselected" label="分享发现" value="2"></v-checkbox>
+        <v-checkbox v-model="tagselected" label="分享创造" value="3"></v-checkbox>
+      </v-row>
 
 
 
       <v-divider class="my-2"></v-divider>
 
       <v-row class="mx-1">
-        <v-switch label="设置积分奖励" v-model="bonus"></v-switch>
+        <v-switch label="设置积分奖励" v-model="havebonus"></v-switch>
         <v-slider
-          v-model="slider"
+          v-model="post_point"
           class="align-center px-2"
           :max="max"
           min="0"
           hide-details
-          v-if="bonus"
+          v-if="havebonus"
         >
-          <template v-slot:append v-if="bonus">
+          <template v-slot:append>
             <v-text-field
-              v-model="slider"
+              v-model="post_point"
               class="mt-0 pt-0"
               hide-details
               single-line
@@ -62,18 +57,75 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="success">发布</v-btn>
+      <v-btn color="success" @click="handlePost">发布</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import { addPost } from "@/api/api";
+// import {addTag} from '@/api/api'
 export default {
   data: () => ({
     name: "editor",
-    bonus: false,
-    slider: 0,
-    max: 50
-  })
+
+    //帖子内容
+    havebonus: false,
+    bonus: 0,
+    max: 50,
+    post_content: "",
+    post_point: 0,
+    post_title: "",
+
+    tags: ["问与答", "程序员", "分享发现", "分享创造"],
+    tagselected: []
+  }),
+  methods: {
+    //测试代码
+    a() {
+      console.log(this.tagselected);
+    },
+    //正式
+    handlePost() {
+      let params = new FormData();
+      params.append("post_content", this.post_content);
+      params.append("post_title", this.post_title);
+      params.append("post_point", this.post_point);
+      params.append("user_id", this.user_id);
+      params.append("have_bonus", this.havebonus ? 1 : 0);
+      addPost(params).then(dataBack => {
+        if (dataBack.code == 200) {
+          console.log(dataBack.data);
+          this.$router.push({ path: "/main" });
+        } else {
+          console.log("失败");
+        }
+      });
+      // if(this.tagselected != 0) {
+      //   for(a in this.tagselected) {
+      //     let params = new FormData();
+          
+      //   }
+      // }
+    }
+  },
+  computed: {
+    user_id() {
+      return JSON.parse(window.localStorage.getItem("user"));
+    },
+    test() {
+      this.a();
+      return this.tagselected;
+    }
+  },
+  props: {
+    points: {
+      default: 0
+    },
+    new: {
+      type: Boolean,
+      default: false
+    }
+  }
 };
 </script>
