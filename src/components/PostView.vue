@@ -48,7 +48,7 @@
     <v-container>
       <v-divider></v-divider>
     </v-container>
-    <Reply v-if="logined" :post_id="this.$route.params.id"></Reply>
+    <Reply v-if="logined" @custom="updateRep" :post_id="this.$route.params.id"></Reply>
   </div>
 </template>
 <script>
@@ -59,6 +59,7 @@ import { putTop } from "@/api/api";
 import { putHigh } from "@/api/api";
 import { deleteById } from "@/api/api";
 import { getTagById } from "@/api/api";
+import {addView} from '@/api/api'
 export default {
   data: () => ({
     //假数据
@@ -91,6 +92,7 @@ export default {
     tops: null,
     newtail: [],
     tags: ["问与答", "程序员", "分享发现", "分享创造"],
+    updateRepList: 0,
 
   }),
   methods: {
@@ -156,6 +158,9 @@ export default {
           console.log("Tag获取失败");
         }
       });
+    },
+    updateRep() {
+      this.key ++;
     }
   },
 
@@ -217,6 +222,9 @@ export default {
   },
   created() {
     this.getPostInfo();
+    addView(parseInt(this.$route.params.id)).then(data => {
+      console.log('浏览数:' + data.data);
+    })
     this.isAdmin = JSON.parse(window.localStorage.getItem("admin"));
   },
   beforeUpdate() {

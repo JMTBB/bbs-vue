@@ -19,7 +19,9 @@ export const updatePost = (id,params) => {return axios.put(`${bases}/post/${id}`
 
 export const putTop = params => { return axios.put(`${bases}/posttop/${params}`).then(res => res.data);}
 export const putHigh = params => { return axios.put(`${bases}/posthigh/${params}`).then(res => res.data);}
+export const addView = params => { return axios.put(`${bases}/postview/${params}`).then(res => res.data);}
 
+export const searchPost = params => { return axios.get(`${bases}/posttitle/${params}`).then(res => res.data);}
 
 
 

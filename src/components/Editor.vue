@@ -5,16 +5,19 @@
     </v-toolbar>
 
     <v-card-text>
-      <v-text-field filled label="标题" v-model="post_title" value="My new post"></v-text-field>
+      <v-form lazy-validation v-model="valid">
+        <v-text-field :rules="titleRule" filled label="标题" v-model="post_title" value="My new post"></v-text-field>
 
-      <v-textarea
-        v-model="post_content"
-        filled
-        counter
-        rows="19"
-        label="内容"
-        value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse"
-      ></v-textarea>
+        <v-textarea
+          :rules="contentRule"
+          v-model="post_content"
+          filled
+          counter
+          rows="19"
+          label="内容"
+          value="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse"
+        ></v-textarea>
+      </v-form>
 
       <v-divider class="my-2"></v-divider>
       <v-row class="mx-1" @click="a">
@@ -55,7 +58,11 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="success" @click="handlePost">{{this.$route.query.id != null ? `更新`:`发布`}}</v-btn>
+      <v-btn
+        color="success"
+        :disabled="!valid"
+        @click="handlePost"
+      >{{this.$route.query.id != null ? `更新`:`发布`}}</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -69,6 +76,14 @@ import { updatePost } from "@/api/api";
 
 export default {
   data: () => ({
+    //校验
+    valid: false,
+    titleRule: [
+      v => !!v || "标题不能为空",
+      v => (v && v.length <= 40) || "标题不得超过40字符"
+    ],
+    contentRule: [v => (v.length <= 250) || "不得超过250字符"],
+
     name: "editor",
 
     //帖子内容
@@ -92,7 +107,7 @@ export default {
     //正式
     handlePost() {
       if (this.$route.query.id != null) {
-       this.update();
+        this.update();
       } else {
         let params = new FormData();
         params.append("post_content", this.post_content);
@@ -161,10 +176,10 @@ export default {
       params.append("post_content", this.post_content);
       params.append("post_title", this.post_title);
       params.append("post_id", this.postid);
-      updatePost(this.postid,params).then(data => {
+      updatePost(this.postid, params).then(data => {
         console.log(data.message);
-        if(data.code==200) {
-          this.$router.push({path: '/main'});
+        if (data.code == 200) {
+          this.$router.push({ path: "/main" });
         }
       });
     }

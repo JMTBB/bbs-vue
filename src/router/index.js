@@ -8,6 +8,7 @@ import MainPage from '../components/MainPageListItem.vue'
 import Editor from '../components/Editor.vue'
 import Setting from '../components/left/Setting.vue'
 import PostView from '../components/PostView.vue'
+import Info from '../components/left/Info.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -23,7 +24,8 @@ const routes = [
       { path: 'editor', name: 'editor', component: Editor },
       { path: 'main', name: 'main', component: MainPage },
       { path: 'setting', name: 'setting', component: Setting },
-      { path: 'post/:id', name: 'post', component: PostView }
+      { path: 'post/:id', name: 'post', component: PostView },
+      { path: 'info', name: 'info', component: Info },
     
     
     
