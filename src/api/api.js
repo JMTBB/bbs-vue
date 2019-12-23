@@ -15,6 +15,7 @@ export const addPost = params => { return axios.post(`${bases}/post`, params).th
 export const getPostByTime = params => { return axios.get(`${bases}/postAllbytime`,params).then(res => res.data);}
 export const getPostById = params => { return axios.get(`${bases}/post/${params}`).then(res => res.data);}
 export const deleteById = params => {return axios.delete(`${bases}/post/${params}`).then(res => res.data); }
+export const updatePost = (id,params) => {return axios.put(`${bases}/post/${id}`, params).then(res => res.data); }
 
 export const putTop = params => { return axios.put(`${bases}/posttop/${params}`).then(res => res.data);}
 export const putHigh = params => { return axios.put(`${bases}/posthigh/${params}`).then(res => res.data);}

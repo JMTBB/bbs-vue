@@ -7,7 +7,7 @@
           <span>&nbsp; > &nbsp;</span>
           <span>Post</span>
           <v-spacer></v-spacer>
-          <v-chip v-for="(i,tag) in postTags" :key="i">{{tags[parseInt(tag.tagid)]}}</v-chip>
+          <v-chip v-for="tag in postTags" :key="tag.postTagId.tagid">{{tags[tag.postTagId.tagid]}}</v-chip>
           <v-menu bottom left v-if="needMenu">
             <template v-slot:activator="{ on }">
               <v-btn icon v-on="on">
@@ -99,11 +99,11 @@ export default {
         case 0:
           //编辑
           console.log("edit");
+          this.$router.push({path: `/editor?id=${this.post.postid}`})
 
           break;
         case 1:
           //删除
-          console.log("delete");
           deleteById(this.post.postid).then(dataBack => {
             if (dataBack.code == 200) {
               console.log("成功");
@@ -115,7 +115,6 @@ export default {
           break;
         case 2:
           //置顶及取消
-          console.log("top");
 
           putTop(this.post.postid).then(dataBack => {
             if (dataBack.code == 200) {
@@ -127,7 +126,6 @@ export default {
           break;
         case 3:
           //加精及取消
-          console.log("highlight");
 
           putHigh(this.post.postid).then(dataBack => {
             if (dataBack.code == 200) {
@@ -145,8 +143,6 @@ export default {
     getPostInfo() {
       getPostById(parseInt(this.$route.params.id)).then(dataBack => {
         if (dataBack.code == 200) {
-          console.log("详情获取成功");
-          console.log(dataBack.data);
           this.post = dataBack.data;
         } else {
           console.log("详情获取失败");
@@ -155,8 +151,6 @@ export default {
 
       getTagById(parseInt(this.$route.params.id)).then(dataBack => {
         if (dataBack.code == 200) {
-          console.log("Tag成功");
-          console.log(dataBack.data);
           this.postTags = dataBack.data;
         } else {
           console.log("Tag获取失败");
@@ -183,11 +177,9 @@ export default {
       }
     },
     htop() {
-      console.log("为啥不置顶" + this.post.toped);
       return this.post.posttop == 1 ? "取消置顶" : "置顶";
     },
     hhigh() {
-      console.log("为啥不jj" + this.post.highlighted);
       return this.post.highli == 1 ? "取消加精" : "加精";
     },
     tail() {
@@ -226,8 +218,6 @@ export default {
   created() {
     this.getPostInfo();
     this.isAdmin = JSON.parse(window.localStorage.getItem("admin"));
-    console.log(this.isAdmin + "视图页面");
-    console.log("创造后" + this.post.toped);
   },
   beforeUpdate() {
     this.isAdmin = JSON.parse(window.localStorage.getItem("admin"));
@@ -238,7 +228,6 @@ export default {
       handler: function() {
         if (this.needMark) {
           this.$store.state.needIt = true;
-          console.log("done");
         }
       }
     }

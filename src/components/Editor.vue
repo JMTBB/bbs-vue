@@ -55,7 +55,7 @@
 
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="success" @click="handlePost">发布</v-btn>
+      <v-btn color="success" @click="handlePost">{{this.$route.query.id != null ? `更新`:`发布`}}</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -63,6 +63,10 @@
 <script>
 import { addPost } from "@/api/api";
 import { addTag } from "@/api/api";
+import { getTagById } from "@/api/api";
+import { getPostById } from "@/api/api";
+import { updatePost } from "@/api/api";
+
 export default {
   data: () => ({
     name: "editor",
@@ -77,7 +81,8 @@ export default {
 
     tags: ["问与答", "程序员", "分享发现", "分享创造"],
     tagselected: [],
-    postdata: null
+    postdata: null,
+    postid: null
   }),
   methods: {
     //测试代码
@@ -86,35 +91,82 @@ export default {
     },
     //正式
     handlePost() {
+      if (this.$route.query.id != null) {
+       this.update();
+      } else {
+        let params = new FormData();
+        params.append("post_content", this.post_content);
+        params.append("post_title", this.post_title);
+        params.append("post_point", this.post_point);
+        params.append("user_id", this.user_id);
+        params.append("have_bonus", this.havebonus ? 1 : 0);
+        addPost(params)
+          .then(dataBack => {
+            if (dataBack.code == 200) {
+              console.log(dataBack.data);
+              this.postdata = dataBack.data;
+              this.$router.push({ path: "/main" });
+            } else {
+              console.log("失败");
+            }
+          })
+          .then(() => {
+            if (this.tagselected != 0) {
+              for (let a in this.tagselected) {
+                let params = new FormData();
+                console.log(this.postdata);
+                params.append("postid", this.postdata.postid);
+                params.append("tagid", a);
+                addTag(params).then(data => {
+                  console.log(data.code);
+                });
+              }
+            }
+          });
+      }
+    },
+    getPost() {
+      getPostById(parseInt(this.$route.query.id)).then(dataBack => {
+        if (dataBack.code == 200) {
+          console.log("详情获取成功");
+          console.log(dataBack.data);
+          this.post_title = dataBack.data.posttitle;
+          this.post_content = dataBack.data.postcontent;
+          this.havebonus = dataBack.data.bonus;
+          this.post_point = dataBack.data.postpoint;
+          this.postid = dataBack.data.postid;
+        } else {
+          console.log("详情获取失败");
+        }
+      });
+
+      getTagById(parseInt(this.$route.query.id)).then(dataBack => {
+        if (dataBack.code == 200) {
+          if (dataBack.data.length != 0) {
+            for (let tag in dataBack.data) {
+              console.log(tag);
+              this.tagselected.push(tag);
+            }
+          }
+          console.log("Tag成功");
+          console.log(dataBack.data[0].postTagId.tagid);
+          this.postTags = dataBack.data;
+        } else {
+          console.log("Tag获取失败");
+        }
+      });
+    },
+    update() {
       let params = new FormData();
       params.append("post_content", this.post_content);
       params.append("post_title", this.post_title);
-      params.append("post_point", this.post_point);
-      params.append("user_id", this.user_id);
-      params.append("have_bonus", this.havebonus ? 1 : 0);
-      addPost(params)
-        .then(dataBack => {
-          if (dataBack.code == 200) {
-            console.log(dataBack.data);
-            this.postdata = dataBack.data;
-            this.$router.push({ path: "/main" });
-          } else {
-            console.log("失败");
-          }
-        })
-        .then(() => {
-          if (this.tagselected != 0) {
-            for (let a in this.tagselected) {
-              let params = new FormData();
-              console.log(this.postdata);
-              params.append("postid", this.postdata.postid);
-              params.append("tagid", a);
-              addTag(params).then(data => {
-                console.log(data.code);
-              });
-            }
-          }
-        });
+      params.append("post_id", this.postid);
+      updatePost(this.postid,params).then(data => {
+        console.log(data.message);
+        if(data.code==200) {
+          this.$router.push({path: '/main'});
+        }
+      });
     }
   },
   computed: {
@@ -133,6 +185,11 @@ export default {
     new: {
       type: Boolean,
       default: false
+    }
+  },
+  created() {
+    if (this.$route.query.id) {
+      this.getPost();
     }
   }
 };
